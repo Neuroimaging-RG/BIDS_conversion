@@ -24,6 +24,7 @@ def infotodict(seqinfo):
     dwi = create_key('dwi/sub-{subject}_dwi')
     info = {t1w: [], t2w: [], flair: [], dwi:[]}
     #last_run = len(seqinfo)
+    #################
     
     for idx, s in enumerate(seqinfo):
         """
