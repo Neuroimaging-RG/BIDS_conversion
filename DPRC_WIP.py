@@ -22,8 +22,14 @@ def infotodict(seqinfo):
     t2w = create_key('anat/sub-{subject}_T2w')
     flair = create_key('anat/sub-{subject}_flair')
     dwi = create_key('dwi/sub-{subject}_dwi')
-    info = {t1w: [], t2w: [], flair: [], dwi:[]}
-    #last_run = len(seqinfo)
+    asl = create_key('asl/sub-{subject}_task-rest_asl')
+    rest = create_key('func/sub-{subject}_task-rest_bold')
+    rest_sbref = create_key('func/sub-{subject}_task-rest_sbref')
+    info = {t1w: [], t2w: [], flair: [], dwi: [], asl:[], rest:[], rest_sbref:[]}
+    # please note, I have made a asl folder, rather than put it in func folder
+    # the BID convention for perfusion has not be finalised yet, check back later
+    # link for BIDs working doc is in here http://bids.neuroimaging.io/bids_spec1.0.2.pdf
+    # last_run = len(seqinfo) don't think need this
     #################
     
     for idx, s in enumerate(seqinfo):
@@ -59,6 +65,15 @@ def infotodict(seqinfo):
         if ('T2_FLAIR' in s.protocol_name):
             info[flair] = [s.series_id]
         # diffusion scans
-        #if (s.dim4 == 105) and ('Diff' in s.protocol_name):
-            #info[dwi] = [s.series_id]
+        if (s.dim4 == 105) and ('Diff' in s.protocol_name):
+            info[dwi] = [s.series_id]
+        # i need to add in here all the blip up and blip down scans
+        # perfusion scan
+        if (s.dim4 == 17) and ('pcasl' in s.protocol_name):
+            info[asl] = [s.series_id]
+        # functional scan
+        if (s.dim4 == 490) and ('bold' in s.protocol_name):
+            info[rest] = [s.series_id]
+        if (s.dim4 == 1) and ('bold' in s.protocol_name):
+            info[rest_sbref] = [s.series_id]
     return info
